@@ -98,7 +98,6 @@
 
             <div class="score"><b>SCORE: <span>00</span></b></div>
             <div class="timer"><b>TIME : <span>60</span></b></div>
-            <button id="btn-modal">모달 창 열기 버튼</button>
         
         </div>
         <div id="modal" class="modal-overlay">
@@ -108,10 +107,8 @@
                 </div>
                 <div class="close-area">X</div>
                 <div class="content">
-                    <p>학번을 입력해주세요</p>
-                    <input type="number" class="school_number" inputmode="numeric" />
-                    <input type="button" value="button" onclick="console.log(document.querySelector('.school_number'))">
-                    
+                    <p>학번을 입력해주세요(입력 후 엔터)</p>
+                    <input type="number" id="school_number" inputmode="numeric" onkeypress="school_number(event)"/>
                 </div>
             </div>
         </div>
@@ -119,27 +116,11 @@
         <div class="cursor"></div>
         <script>
 
-            function test(event){
-                if(event.key === '.' || event.key === '-' || event.key >= 0 && event.key <= 9) {
-                    return true;
-                }
-                return false;
-            }
 
             const modal = document.getElementById("modal")
             const btnModal = document.getElementById("btn-modal")
             btnModal.addEventListener("click", e => {
                 modal.style.display = "flex"
-            })
-            const closeBtn = modal.querySelector(".close-area")
-            closeBtn.addEventListener("click", e => { /*타이머 재설정 되게 하는 코드 추가*/
-                modal.style.display = "none"
-            })
-            modal.addEventListener("click", e => {
-                const evTarget = e.target
-                if(evTarget.classList.contains("modal-overlay")) { /*타이머 재설정 되게 하는 코드 추가*/
-                    modal.style.display = "none"
-                }
             })
             
             const cursor = document.querySelector('.cursor')
@@ -154,6 +135,17 @@
             let mole_up_time = 5000
             let percent=[1,holes.length]
             let last_percent=[1,holes.length]
+            let School_Number = 0
+
+
+            function school_number(e){
+                if(e.keyCode == 13){
+                    School_Number = document.getElementById("school_number").value;
+                    console.log(School_Number)
+                    game_start()
+                    
+                }
+            }
 
             function min(a,b){
                 if(a>b)return b
@@ -225,6 +217,10 @@
 
 
                 }
+
+                for(var i=0;i<holes.length;i++){ /* 한번만 실행함 */
+                    if(hole_out[i]===0)run(i)
+                }
             }
 
             function mole_move(A,B,i){ /* class : A -> B, down : {A:mole-rise,B:mole-down}, up : {A:mole-down,B:mole-rise} */
@@ -265,13 +261,12 @@
                             if(mole_ans[i]==answer){
                                 score += 3
                                 mole_up_time=max(2000,5000-(3000/5)*(score/3))
+                                new_pb()
                             }else score -= 1
                             scoreEl.textContent = score
                             clearTimeout(timer)
                             mole_move('rise','down',i)
 
-
-                            new_pb()
                             new_ans(i)
 
                             run(i)
@@ -292,11 +287,6 @@
 
                 }, rand(1000,5000))
 
-            }
-            game_start()
-
-            for(var i=0;i<holes.length;i++){ /* 한번만 실행함 */
-                if(hole_out[i]===0)run(i)
             }
 
             window.addEventListener('mousemove', e => {
