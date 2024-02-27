@@ -118,11 +118,6 @@
 
 
             const modal = document.getElementById("modal")
-            const btnModal = document.getElementById("btn-modal")
-            btnModal.addEventListener("click", e => {
-                modal.style.display = "flex"
-            })
-            
             const cursor = document.querySelector('.cursor')
             const holes = [...document.querySelectorAll('.mole')]
             const hole_out = new Array(holes.length).fill(0);
@@ -135,13 +130,14 @@
             let mole_up_time = 5000
             let percent=[1,holes.length]
             let last_percent=[1,holes.length]
-            let School_Number = 0
+            let user_School_Number = 0
 
 
             function school_number(e){
                 if(e.keyCode == 13){
-                    School_Number = document.getElementById("school_number").value;
-                    console.log(School_Number)
+                    user_School_Number = document.getElementById("school_number").value;
+                    console.log(user_School_Number)
+                    modal.style.display = "none"
                     game_start()
                     
                 }
