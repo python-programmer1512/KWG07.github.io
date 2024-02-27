@@ -98,10 +98,50 @@
 
             <div class="score"><b>SCORE: <span>00</span></b></div>
             <div class="timer"><b>TIME : <span>60</span></b></div>
+            <button id="btn-modal">모달 창 열기 버튼</button>
         
         </div>
+        <div id="modal" class="modal-overlay">
+            <div class="modal-window">
+                <div class="title">
+                    <h2>Math Game</h2>
+                </div>
+                <div class="close-area">X</div>
+                <div class="content">
+                    <p>학번을 입력해주세요</p>
+                    <input type="number" class="school_number" inputmode="numeric" />
+                    <input type="button" value="button" onclick="console.log(document.querySelector('.school_number'))">
+                    
+                </div>
+            </div>
+        </div>
+
         <div class="cursor"></div>
         <script>
+
+            function test(event){
+                if(event.key === '.' || event.key === '-' || event.key >= 0 && event.key <= 9) {
+                    return true;
+                }
+                return false;
+            }
+
+            const modal = document.getElementById("modal")
+            const btnModal = document.getElementById("btn-modal")
+            btnModal.addEventListener("click", e => {
+                modal.style.display = "flex"
+            })
+            const closeBtn = modal.querySelector(".close-area")
+            closeBtn.addEventListener("click", e => { /*타이머 재설정 되게 하는 코드 추가*/
+                modal.style.display = "none"
+            })
+            modal.addEventListener("click", e => {
+                const evTarget = e.target
+                if(evTarget.classList.contains("modal-overlay")) { /*타이머 재설정 되게 하는 코드 추가*/
+                    modal.style.display = "none"
+                }
+            })
+            
             const cursor = document.querySelector('.cursor')
             const holes = [...document.querySelectorAll('.mole')]
             const hole_out = new Array(holes.length).fill(0);
