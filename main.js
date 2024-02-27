@@ -207,3 +207,11 @@ window.addEventListener('mouseup', () => {
     cursor.classList.remove('active')
     
 })
+
+window.addEventListener('touchstart', () => {
+    cursor.classList.add('active')
+})
+window.addEventListener('touchend', () => {
+    cursor.classList.remove('active')
+    
+})

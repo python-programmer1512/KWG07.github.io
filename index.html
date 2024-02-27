@@ -5,90 +5,91 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
-    <title>Document</title>
-    
+    <title>Whack A Mole</title>
 </head>
 <body>
-    <div class="pb_board">
+    <div class="GAME">
+        <div class="pb_board">
 
+        </div>
+        <div class="board">
+            <div class="MOLES">
+                <div class="hole">
+                    <div class="hole-in"></div>
+                    <div class="hole-top"></div>
+                    <div class="mole"></div>
+                    <div class="hole-bottom"></div>
+                </div>
+            </div>
+            <div class="MOLES">
+                <div class="hole">
+                    <div class="hole-in"></div>
+                    <div class="hole-top"></div>
+                    <div class="mole"></div>
+                    <div class="hole-bottom"></div>
+                </div>
+            </div>
+            <div class="MOLES">
+                <div class="hole">
+                    <div class="hole-in"></div>
+                    <div class="hole-top"></div>
+                    <div class="mole"></div>
+                    <div class="hole-bottom"></div>
+                </div>
+            </div>
+            <div class="MOLES">
+                <div class="hole">
+                    <div class="hole-in"></div>
+                    <div class="hole-top"></div>
+                    <div class="mole"></div>
+                    <div class="hole-bottom"></div>
+                </div>
+            </div>
+            <div class="MOLES">
+                <div class="hole">
+                    <div class="hole-in"></div>
+                    <div class="hole-top"></div>
+                    <div class="mole"></div>
+                    <div class="hole-bottom"></div>
+                </div>
+            </div>
+            <div class="MOLES">
+                <div class="hole">
+                    <div class="hole-in"></div>
+                    <div class="hole-top"></div>
+                    <div class="mole"></div>
+                    <div class="hole-bottom"></div>
+                </div>
+            </div>
+            <div class="MOLES">
+                <div class="hole">
+                    <div class="hole-in"></div>
+                    <div class="hole-top"></div>
+                    <div class="mole"></div>
+                    <div class="hole-bottom"></div>
+                </div>
+            </div>
+            <div class="MOLES">
+                <div class="hole">
+                    <div class="hole-in"></div>
+                    <div class="hole-top"></div>
+                    <div class="mole"></div>
+                    <div class="hole-bottom"></div>
+                </div>
+            </div>
+            <div class="MOLES">
+                <div class="hole">
+                    <div class="hole-in"></div>
+                    <div class="hole-top"></div>
+                    <div class="mole"></div>
+                    <div class="hole-bottom"></div>
+                </div>
+            </div>
+        </div>
+        <br><br>
+        <div class="score"><b>SCORE: <span>00</span></b></div>
+        <div class="timer"><b>TIME : <span>60</span></b></div>
     </div>
-    <div class="board">
-        <div class="MOLES">
-            <div class="hole">
-                <div class="hole-in"></div>
-                <div class="hole-top"></div>
-                <div class="mole"></div>
-                <div class="hole-bottom"></div>
-            </div>
-        </div>
-        <div class="MOLES">
-            <div class="hole">
-                <div class="hole-in"></div>
-                <div class="hole-top"></div>
-                <div class="mole"></div>
-                <div class="hole-bottom"></div>
-            </div>
-        </div>
-        <div class="MOLES">
-            <div class="hole">
-                <div class="hole-in"></div>
-                <div class="hole-top"></div>
-                <div class="mole"></div>
-                <div class="hole-bottom"></div>
-            </div>
-        </div>
-        <div class="MOLES">
-            <div class="hole">
-                <div class="hole-in"></div>
-                <div class="hole-top"></div>
-                <div class="mole"></div>
-                <div class="hole-bottom"></div>
-            </div>
-        </div>
-        <div class="MOLES">
-            <div class="hole">
-                <div class="hole-in"></div>
-                <div class="hole-top"></div>
-                <div class="mole"></div>
-                <div class="hole-bottom"></div>
-            </div>
-        </div>
-        <div class="MOLES">
-            <div class="hole">
-                <div class="hole-in"></div>
-                <div class="hole-top"></div>
-                <div class="mole"></div>
-                <div class="hole-bottom"></div>
-            </div>
-        </div>
-        <div class="MOLES">
-            <div class="hole">
-                <div class="hole-in"></div>
-                <div class="hole-top"></div>
-                <div class="mole"></div>
-                <div class="hole-bottom"></div>
-            </div>
-        </div>
-        <div class="MOLES">
-            <div class="hole">
-                <div class="hole-in"></div>
-                <div class="hole-top"></div>
-                <div class="mole"></div>
-                <div class="hole-bottom"></div>
-            </div>
-        </div>
-        <div class="MOLES">
-            <div class="hole">
-                <div class="hole-in"></div>
-                <div class="hole-top"></div>
-                <div class="mole"></div>
-                <div class="hole-bottom"></div>
-            </div>
-        </div>
-    </div>
-    <br><br>
-    <div class="score"><b>SCORE: <span>00</span></b></div>
-    <div class="timer"><b>TIME : <span>60</span></b></div>
     <div class="cursor"></div>
 
     <script>
@@ -99,19 +100,10 @@
         const TIMER=document.querySelector('.timer span');
         let score = 0
 
+
+
         function rand(min, max) {
             return Math.floor(Math.random() * (max - min + 1)) + min;
-        }
-
-        function get_rank_class(_class) {
-            fastapi("get", "/api/rank/class/list/" + _class, {}, (json) => {
-                
-                class_rank_list = json.rank_list
-                for(const [index, all_rank] of class_rank_list.entries()){
-                    users_rank(all_rank.user_id,all_rank.score,index)
-
-                }
-            })
         }
 
         function game_start(){
@@ -136,6 +128,7 @@
 
             }
         }
+
         function mole_move(A,B,i){ /* class : A -> B, down : {A:mole-rise,B:mole-down}, up : {A:mole-down,B:mole-rise} */
             const mole_before_class = "mole-"+A
             const mole_after_class = "mole-"+B
@@ -152,11 +145,32 @@
 
         }
 
+        function updateTimer() {
+            const future = Date.parse("2024/01/01 00:00:00")
+            const now = new Date()
+            const diff = future - now
+
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24))
+            const hours = Math.floor(diff / (1000 * 60 * 60))
+            const mins = Math.floor(diff / (1000 * 60))
+            const secs = Math.floor(diff / 1000)
+
+            const d = days
+            const h = hours - days * 24
+            const m = mins - hours * 60
+            const s = secs - mins * 60
+
+            return s
+
+        }
+
         function run(i){
 
             const hole = holes[i]
             let timer = null
             let uptimer = null
+            TIMER.textContent = updateTimer()
+            console.log(TIMER.textContent)
 
             uptimer = setTimeout(() => { /* 두더지가 올라오기전 대기 시간 */
                 const img = document.getElementsByTagName('img')[i]
@@ -194,7 +208,6 @@
             }, rand(1000,2000))
 
         }
-
         game_start()
 
         for(var i=0;i<holes.length;i++){ /* 한번만 실행함 */
@@ -202,15 +215,38 @@
         }
 
         window.addEventListener('mousemove', e => {
+            console.log("mousemove!!!")
             cursor.style.top = e.pageY  - cursor.clientHeight/2 + 'px'
             cursor.style.left = e.pageX - cursor.clientWidth/2 + 'px'
 
 
         })
+        window.addEventListener('touchmove', e => {
+            console.log("touchmove!!!")
+            this.touches = e.changedTouches;
+            cursor.style.top = this.touches[0].pageY  - cursor.clientHeight/2 + 'px'
+            cursor.style.left = this.touches[0].pageX - cursor.clientWidth/2 + 'px'
+
+
+        })
+
+
         window.addEventListener('mousedown', () => {
+            console.log("MOUSEDOWN!!!")
             cursor.classList.add('active')
         })
         window.addEventListener('mouseup', () => {
+            console.log("MOUSEUP!!!")
+            cursor.classList.remove('active')
+            
+        })
+
+        window.addEventListener('touchstart', () => {
+            console.log("touchstart!!!")
+            cursor.classList.add('active')
+        })
+        window.addEventListener('touchend', () => {
+            console.log("touchend!!!")
             cursor.classList.remove('active')
             
         })

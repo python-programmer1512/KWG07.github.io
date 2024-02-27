@@ -3,13 +3,23 @@
 animation : https://coding-levup.tistory.com/20
 */
 *{
-    margin: 0;
     padding: 0;
 }
 
 html, body{
-    height: 100%;
+    width: 1150px;
+    height: 900px;
+    margin: 0 auto;
 }
+
+@media (max-width:1150px){
+    html,body {
+        width:100%;
+        height: 78.3%;
+        margin: 0 auto;
+    }
+}
+
 body{
     font-family: Arial, Helvetica, sans-serif;
     background-color: rgb(129,193,71);
@@ -19,30 +29,58 @@ body{
     justify-content: center;
     align-items: center;
     overflow: hidden;
+
     -webkit-user-select:none;
     -moz-user-select:none;
     -ms-user-select:none;
     user-select:none
 }
-.score{
-    font-size: 2em;
-    margin-bottom: .5em;
+.GAME{
+    width: 70%;
+    height: 100%;
+    position: relative;
 }
 
+.cursor{
+    height: 100px; /* 높이 */
+    width: 100px; /* 너비 */
+    position: absolute;
+    background-image: url('./image/hammer.png');
+    background-size: 100% 100%;
+    transition: background-image .3s ease-out;
+    pointer-events: none;
+}
+
+
+.score{
+    position: relative;
+    font-size: 2em;
+    margin-left: 2em;
+    margin-bottom: .5em;
+}
+.timer{
+    position: relative;
+    font-size: 2em;
+    margin-left: 2em;
+}
+
+
 .pb_board{
-    height: 250px;
-    width: 700px;
+    height: 30%;
+    width: 80%;
+    margin : 0 auto;
     background-image: url("./image/board.png");
     background-size: 100% 100%;
 }
 
 .board{
-    height: 550px;
-    width: 550px;
+    height: 55%;
+    width: 60%;
     display: grid;
+    margin: 0 auto;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(3, 1fr);
-    gap: 50px;
+    gap: 10px;
 }
 .hole{ /* unset 는 부모의 상속*/
     width: 100%;
@@ -190,15 +228,6 @@ body{
 
 
 
-.cursor{
-    height: 100px; /* 높이 */
-    width: 100px; /* 너비 */
-    position: absolute;
-    background-image: url('./image/hammer.png');
-    background-size: 100% 100%;
-    transition: background-image .3s ease-out;
-    pointer-events: none;
-}
 
 
 
