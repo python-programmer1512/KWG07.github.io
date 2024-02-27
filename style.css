@@ -2,86 +2,88 @@
 /*
 animation : https://coding-levup.tistory.com/20
 */
-*{
-    padding: 0;
-}
-
-html, body{
-    width: 1150px;
-    height: 900px;
-    margin: 0 auto;
-}
-
-@media (max-width:1150px){
-    html,body {
-        width:100%;
-        height: 78.3%;
-        margin: 0 auto;
-    }
-}
-
 body{
     font-family: Arial, Helvetica, sans-serif;
     background-color: rgb(129,193,71);
     color: #fff;
+}
+
+.container{
+
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
+    align-items: center; /* or stretch*/
     overflow: hidden;
-
-    -webkit-user-select:none;
-    -moz-user-select:none;
-    -ms-user-select:none;
-    user-select:none
 }
-.GAME{
-    width: 70%;
-    height: 100%;
-    position: relative;
-}
-
-.cursor{
-    height: 100px; /* 높이 */
-    width: 100px; /* 너비 */
-    position: absolute;
-    background-image: url('./image/hammer.png');
-    background-size: 100% 100%;
-    transition: background-image .3s ease-out;
-    pointer-events: none;
-}
-
-
-.score{
-    position: relative;
-    font-size: 2em;
-    margin-left: 2em;
-    margin-bottom: .5em;
-}
-.timer{
-    position: relative;
-    font-size: 2em;
-    margin-left: 2em;
-}
-
 
 .pb_board{
-    height: 30%;
-    width: 80%;
-    margin : 0 auto;
+    position: absolute;
+    height: 150px;
+    width: 90vw;
     background-image: url("./image/board.png");
     background-size: 100% 100%;
+    transform: translateY(50%);
+}
+/*
+max : width 가 value보다 작을때 실행
+min : width 가 value 보다 클때 실행
+translate : 사진 크기의 비율 만큼 이동
+left : 실제 이동 값
+*/
+@media (min-width : 500px){ 
+    .pb_board{
+        position: absolute;
+        height: 150px;
+        width: 500px;
+        background-image: url("./image/board.png");
+        background-size: 100% 100%;
+    }
+
+}
+
+.problem{
+    pointer-events: none;
+    text-align: center;
+    color:black;
+    font-size:125%;
+    transform: translateY(50px);
 }
 
 .board{
-    height: 55%;
-    width: 60%;
+    position: absolute;
     display: grid;
     margin: 0 auto;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(3, 1fr);
-    gap: 10px;
+    gap: 30px;
+
+    width: 85vw;
+    height: 85vw;
+
+    transform: translateY(50%) translateY(170px);
 }
+
+@media (min-width : 500px){ 
+    .board{
+        position: absolute;
+        display: grid;
+        margin: 0 auto;
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: repeat(3, 1fr);
+        gap: 50px;
+
+        width: 500px;
+        height: 500px;
+
+        
+        transform: translateY(50%) translateY(170px);
+    }
+
+}
+
+
+
 .hole{ /* unset 는 부모의 상속*/
     width: 100%;
     height: 100%;
@@ -211,29 +213,63 @@ body{
         transform: translateX(0%) translateY(110%);
     }
     100%{
-        transform: translateX(0%) translateY(16%);
+        transform: translateX(0%) translateY(20%);
     }
 }
 
 @keyframes text-down { /* -% : 위로. +% : 아래로*/
     0%{
-        transform: translateX(0%) translateY(16%);
+        transform: translateX(0%) translateY(20%);
     }
     100%{
         transform: translateX(0%) translateY(110%);
     }
 }
 
+.score{
+    position: absolute;
+    transform: translateY(50%) translateY(170px) translateY(85vw);
+    font-size: 2em;
+    color: black;
+}
 
+@media(min-width : 500px){
+    .score{
+        position: absolute;
+        transform: translateY(50%) translateY(170px) translateY(500px);
+        font-size: 2em;
+        color: black;
+    }
 
+}
 
+.timer{
+    position: absolute;
+    transform: translateY(50%) translateY(170px) translateY(500px) translateY(30px);
+    font-size: 2em;
+    color:black
+}
 
-
+.cursor{
+    height: 100px; /* 높이 */
+    width: 100px; /* 너비 */
+    position: absolute;
+    background-image: url('./image/hammer.png');
+    background-size: 100% 100%;
+    transition: background-image .3s ease-out;
+    pointer-events: none;
+}
 
 
 
 .cursor.active{
     animation-name: hammer_crash;
+    animation-duration: .3s;
+
+}
+
+.cursor.active-touch{
+    animation-name: hammer_crash_touch;
     animation-duration: .3s;
 
 }
@@ -244,5 +280,14 @@ body{
     }
     100%{
         background-image: url('./image/hammer.png');
+    }
+}
+
+@keyframes hammer_crash_touch {
+    0%{
+        background-image: url('./image/hammer.png');
+    }
+    100%{
+        background-image: url('./image/hammer_crash.png');
     }
 }

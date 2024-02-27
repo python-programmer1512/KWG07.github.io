@@ -209,9 +209,9 @@ window.addEventListener('mouseup', () => {
 })
 
 window.addEventListener('touchstart', () => {
-    cursor.classList.add('active')
+    cursor.classList.add('active-touch')
 })
 window.addEventListener('touchend', () => {
-    cursor.classList.remove('active')
+    cursor.classList.remove('active-touch')
     
 })
