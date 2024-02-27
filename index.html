@@ -10,7 +10,7 @@
     <body>
         <div class="container">
             <div class="pb_board">
-                <div class="problem"><b><span>12345abcdefgfedcba12345</span></b></div>
+                <div class="problem"><b><span>PROBLEM</span></b></div>
             </div>
             <div class="board">
                 <div class="MOLE">
@@ -105,17 +105,64 @@
             const cursor = document.querySelector('.cursor')
             const holes = [...document.querySelectorAll('.mole')]
             const hole_out = new Array(holes.length).fill(0);
+            const mole_ans = new Array(holes.length).fill(0);
             const scoreEl = document.querySelector('.score span')
             const TIMER=document.querySelector('.timer span');
+            const PB=document.querySelector('.problem span');
             let score = 0
+            let answer = 0 
+            let mole_up_time = 5000
+            let percent=[1,holes.length]
+            let last_percent=[1,holes.length]
 
-
+            function min(a,b){
+                if(a>b)return b
+                else return a
+            }
+            function max(a,b){
+                if(a<b)return b
+                else return a
+            }
 
             function rand(min, max) {
                 return Math.floor(Math.random() * (max - min + 1)) + min;
             }
 
+            function new_pb(){
+                answer=rand(1,10)
+                PB.textContent = answer
+
+            }
+            function new_ans(i){
+                let random=rand(1,percent[1])
+                if(random<=percent[0]){
+                    /*answer*/
+                    last_percent[0]=percent[0]
+                    last_percent[1]=percent[1]
+                    last_percent[0]=min(last_percent[0],last_percent[1])
+                    percent[0]=1
+                    percent[1]++
+
+                    mole_ans[i]=answer
+                }else{
+                    /*not answer*/
+                    let wrong_answer=0;
+                    if(rand(1,2)==1){
+                        wrong_answer=rand(answer-10,answer-1)
+                    }else{
+                        wrong_answer=rand(answer+1,answer+10)
+                    }
+                    mole_ans[i]=wrong_answer
+                    percent[0]++
+
+
+                }
+
+            }
+
+
             function game_start(){
+                new_pb()
                 for(var i=0;i<holes.length;i++){
                     const hole = holes[i]
                     const img = document.createElement('img')
@@ -132,6 +179,8 @@
                     span.id = 'text-movement_'+i
 
                     hole.appendChild(span)
+
+                    new_ans(i)
 
 
 
@@ -164,24 +213,29 @@
                 uptimer = setTimeout(() => { /* 두더지가 올라오기전 대기 시간 */
                     const img = document.getElementsByTagName('img')[i]
                     const span = document.getElementsByTagName('span')[i+1]
-
+                    
                     /* 변경 */
-
-                    span.innerHTML = "hello";
+                    span.innerHTML = mole_ans[i];
                     mole_move('down','rise',i)
                     hole_out[i]=1
 
                     img.addEventListener('click', () => { /* 두더지를 때렸을 때*/
                         if(hole_out[i]===1){
                             hole_out[i]=0
-                            score += 10
+                            if(mole_ans[i]==answer){
+                                score += 3
+                                mole_up_time=max(2000,5000-(3000/5)*(score/3))
+                            }else score -= 1
                             scoreEl.textContent = score
                             clearTimeout(timer)
                             mole_move('rise','down',i)
+
+
+                            new_pb()
+                            new_ans(i)
+
                             run(i)
-                    
-                            setTimeout(() => {
-                            }, rand(1000,5000)) /* 다음 두더지가 나오는데 걸리는 시간 */
+
                         }
                     })
 
@@ -191,10 +245,12 @@
                     timer = setTimeout  (() => { /* 두더지를 때리지 못하고 들어갔을때 */
                     hole_out[i]=0
                         mole_move('rise','down',i)
-                        run(i)
-                    }, rand(100000,500000))
 
-                }, rand(1000,2000))
+                        new_ans(i)
+                        run(i)
+                    }, rand(1000,mole_up_time))
+
+                }, rand(1000,5000))
 
             }
             game_start()
@@ -204,39 +260,34 @@
             }
 
             window.addEventListener('mousemove', e => {
-                console.log("mousemove!!!")
                 cursor.style.top = e.pageY  - cursor.clientHeight/2 + 'px'
                 cursor.style.left = e.pageX - cursor.clientWidth/2 + 'px'
-
-
-            })
-            window.addEventListener('touchmove', e => {
-                console.log("touchmove!!!")
-                this.touches = e.changedTouches;
-                cursor.style.top = this.touches[0].pageY  - cursor.clientHeight/2 + 'px'
-                cursor.style.left = this.touches[0].pageX - cursor.clientWidth/2 + 'px'
 
 
             })
 
 
             window.addEventListener('mousedown', () => {
-                console.log("MOUSEDOWN!!!")
                 cursor.classList.add('active')
             })
             window.addEventListener('mouseup', () => {
-                console.log("MOUSEUP!!!")
                 cursor.classList.remove('active')
                 
             })
 
-            window.addEventListener('touchstart', () => {
+            window.addEventListener('touchstart', (e) => {
                 console.log("touchstart!!!")
-                cursor.classList.add('active')
+                this.touches = e.changedTouches;
+                cursor.style.top = this.touches[0].pageY  - cursor.clientHeight/2 + 'px'
+                cursor.style.left = this.touches[0].pageX - cursor.clientWidth/2 + 'px'
+                cursor.classList.add('active-touch')
             })
-            window.addEventListener('touchend', () => {
+            window.addEventListener('touchend', (e) => {
                 console.log("touchend!!!")
-                cursor.classList.remove('active')
+                this.touches = e.changedTouches;
+                cursor.style.top = this.touches[0].pageY  - cursor.clientHeight/2 + 'px'
+                cursor.style.left = this.touches[0].pageX - cursor.clientWidth/2 + 'px'
+                cursor.classList.remove('active-touch')
                 
             })
 
