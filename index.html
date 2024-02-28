@@ -303,7 +303,7 @@
                 
                 let timer_value=0;
                 timer_value= setInterval(()=>{
-                    TIMER.textContent = (10-((new Date().getTime() - start_time)/1000)).toFixed(2)
+                    TIMER.textContent = (60-((new Date().getTime() - start_time)/1000)).toFixed(2)
                     if(TIMER.textContent<=0){
                         if(game_finish==0){
                             game_finish = 1
@@ -408,7 +408,7 @@
 
                         new_ans(i)
                         run(i)
-                    }, rand(100000,500000))/*mole_up_time*/
+                    }, rand(1000,mole_up_time))
 
                 }, rand(1000,5000))
 
