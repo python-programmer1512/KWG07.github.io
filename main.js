@@ -13,12 +13,12 @@ const holes = [...document.querySelectorAll('.mole')]
 const hole_out = new Array(holes.length).fill(0);
 const mole_ans = new Array(holes.length).fill(0);
 const scoreEl = document.querySelector('.score span')
+const final_score = document.querySelector('.final-score span')
 const TIMER=document.querySelector('.timer span');
 const PB=document.querySelector('.problem span');
 const game_start_button = document.getElementById("start-img-button")
 let score = 0
 let answer = 0 
-let mole_up_time = 5000
 let percent=[1,holes.length]
 let last_percent=[1,holes.length]
 let user_School_Number = 0
@@ -29,6 +29,7 @@ let last_game = 0
 let category = 0
 let category_list = ["로그","지수","수열"]
 let before_start_setting = [0,0] // 학번 입력, 게임 유형 선택
+let game_play_time = 60
 
 function ord(v){
     return String.fromCharCode(v)
@@ -41,6 +42,13 @@ function gamerule(){
 function setting_game(){
     gs.style.display = "inline"
     sp.style.display = "none"
+    check_imoji.style.display="none"
+    check_imoji_check.style.display="none"
+    submit_category.style.display="none"
+    submit_category_check.style.display="none"
+    check_category.textContent=""
+    game_start_button.style.display="none"
+    before_start_setting=[0,0]
 
 }
 
@@ -143,15 +151,18 @@ function game_start(){
     gameover_show_re.style.display="none"
     score = 0
     answer = 0 
-    mole_up_time = 5000
     game_finish = 0
     percent=[1,holes.length]
     last_percent=[1,holes.length]
 
+    console.log('NEW GAME')
+    console.log('mole cnt')
+    console.log(holes.length)
+
     new_pb()
     for(var i=0;i<holes.length;i++){
+        hole_out[i]=0
         if(last_game===0){
-            hole_out[i]=0
             const hole = holes[i]
             const img = document.createElement('img')
             img.classList.add('mole-down')
@@ -170,16 +181,20 @@ function game_start(){
         }
 
         new_ans(i)
+        mole_move('rise','down',i)
 
 
 
     }
     start_time = new Date().getTime()
+    console.log('timeset')
+    console.log(start_time)
     last_game=1
     
     let timer_value=0;
+    TIMER.textContent = game_play_time
     timer_value= setInterval(()=>{
-        TIMER.textContent = (5-((new Date().getTime() - start_time)/1000)).toFixed(2)
+        TIMER.textContent = (game_play_time-((new Date().getTime() - start_time)/1000)).toFixed(2)
         if(TIMER.textContent<=0){
             if(game_finish===0){
                 game_finish = 1
@@ -191,10 +206,13 @@ function game_start(){
                 gs.style.display = "none"
                 sp.style.display = "none"
                 gameover_show_re.style.display = "inline"
+                final_score.textContent=score
             }
         }
     },1)
     for(var i=0;i<holes.length;i++){
+        console.log('   ')
+        console.log(hole_out[i])
         if(hole_out[i]===0)run(i)
 
     }
@@ -206,7 +224,6 @@ function retry_game(){
     modal.style.display = ""
     gs.style.display = "none"
     sp.style.display = "inline"
-    user_School_Number=0
     gameover_show_re.style.display = "none"
 
 }
@@ -219,6 +236,8 @@ function mole_move(A,B,i){ /* class : A -> B, down : {A:mole-rise,B:mole-down}, 
     const text_after_class = "text-"+B
 
     const before_class = document.getElementById("mole-movement_"+i)
+    console.log('rise or down')
+    console.log(before_class)
     before_class.classList.replace(mole_before_class,mole_after_class)
 
     const before_class_text = document.getElementById("text-movement_"+i)
@@ -229,11 +248,14 @@ function mole_move(A,B,i){ /* class : A -> B, down : {A:mole-rise,B:mole-down}, 
 
 
 function run(i){
+    console.log('move mole')
+    console.log(i)
     const hole = holes[i]
     let timer = null
     let uptimer = null
 
     if(TIMER.textContent<=0){
+        console.log('gameover')
         clearTimeout(uptimer)
         return
     }
@@ -243,8 +265,10 @@ function run(i){
     uptimer = setTimeout(() => { /* 두더지가 올라오기전 대기 시간 */
         const img = document.getElementsByTagName('img')[i]
         const span = document.getElementsByTagName('span')[i+1]
+        console.log('finish delay')
 
         if(TIMER.textContent<=0){
+            console.log('gameover1')
             clearTimeout(uptimer)
             return
         }
@@ -259,7 +283,6 @@ function run(i){
                 hole_out[i]=0
                 if(mole_ans[i]===answer){
                     score += 3
-                    mole_up_time=max(2000,5000-(3000/5)*(score/3))
                     new_pb()
                 }else score -= 1
                 scoreEl.textContent = score
@@ -293,7 +316,7 @@ function run(i){
 
             new_ans(i)
             run(i)
-        }, rand(1000,mole_up_time))
+        }, rand(1000,2000))
 
     }, rand(1000,5000))
 

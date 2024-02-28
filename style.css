@@ -168,7 +168,7 @@ left : 실제 이동 값
         transform: translateY(110%);
     
         animation-name: text-rise;
-        animation-duration: 1s;
+        animation-duration: .8s;
         animation-fill-mode: forwards;
     
         font-size: 1em;
@@ -182,7 +182,7 @@ left : 실제 이동 값
     position: absolute;
 
     animation-name: rise;
-    animation-duration: 1s;
+    animation-duration: .8s;
     animation-fill-mode: forwards;
 
 }
@@ -194,7 +194,7 @@ left : 실제 이동 값
     position: absolute;
 
     animation-name: down;
-    animation-duration: 1s;
+    animation-duration: .8s;
     animation-fill-mode: forwards;
 
 }
@@ -210,7 +210,7 @@ left : 실제 이동 값
     transform: translateY(110%);
 
     animation-name: text-down;
-    animation-duration: 1s;
+    animation-duration: .8s;
     animation-fill-mode: forwards;
 
     font-size: .5em;
@@ -229,7 +229,7 @@ left : 실제 이동 값
         transform: translateY(110%);
     
         animation-name: text-down;
-        animation-duration: 1s;
+        animation-duration: .8s;
         animation-fill-mode: forwards;
     
         font-size: 1em;
