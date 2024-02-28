@@ -1,9 +1,13 @@
 const modal = document.getElementById("modal")
 const gameover_show_re = document.getElementById("gameover")
 const gs = document.getElementById("game-setting")
+const submit_category = document.getElementById("submit-category")
+const submit_category_check = document.getElementById("submit-category_check")
+const check_school_number=document.querySelectorAll('.content span')[2];
 const sp = document.getElementById("start-page")
 const check_imoji = document.getElementById("submit-schoolnumber")
-const check_school_number=document.querySelectorAll('.content span')[2];
+const check_imoji_check = document.getElementById("submit-schoolnumber_check")
+const check_category=document.querySelectorAll('.content span')[5];
 const cursor = document.querySelector('.cursor')
 const holes = [...document.querySelectorAll('.mole')]
 const hole_out = new Array(holes.length).fill(0);
@@ -11,6 +15,7 @@ const mole_ans = new Array(holes.length).fill(0);
 const scoreEl = document.querySelector('.score span')
 const TIMER=document.querySelector('.timer span');
 const PB=document.querySelector('.problem span');
+const game_start_button = document.getElementById("start-img-button")
 let score = 0
 let answer = 0 
 let mole_up_time = 5000
@@ -18,9 +23,12 @@ let percent=[1,holes.length]
 let last_percent=[1,holes.length]
 let user_School_Number = 0
 let game_mode = 0
-let time=0
 let start_time = 0
 let game_finish = 0
+let last_game = 0
+let category = 0
+let category_list = ["로그","지수","수열"]
+let before_start_setting = [0,0] // 학번 입력, 게임 유형 선택
 
 function ord(v){
     return String.fromCharCode(v)
@@ -41,31 +49,38 @@ function click2start(){
     console.log('school_number :',user_School_Number)
     //if(user_School_Number>=10000 && user_School_Number<=99999){
         check_imoji.style.display="inline"
-        check_school_number·textContent = "학번 :"+user_School_Number
+        check_imoji_check.style.display="inline"
+        check_school_number.textContent = "학번 :"+user_School_Number
+        before_start_setting[0]=1
 
-        console.log(modal.style.display)
+    //}else{ // 조건 만족 안하면 inline -> none}
+}
+function set_category(input_category){
+    if(category_list.includes(String(input_category))){
+        category=input_category
+        submit_category.style.display="inline"
+        submit_category_check.style.display="inline"
+        check_category.textContent = "유형 : " + category
+        before_start_setting[1]=1
+        if(before_start_setting[0]==1 && before_start_setting[1]==1){
+            game_start_button.style.display="inline"
+        }
+    }else{
+        alert('올바르지 않은 카테고리')
+    }
 
-        modal.style.display="none"
-        gs.style.display="none"
-        gameover_show_re.style.display="inline"
-        game_start()
-    //}
 }
 
 function school_number(e){ // value + ord(keyCode) : 입력한 숫자
-    if(e.keyCode == 13){ //13 이 엔터 입력
+    if(e.keyCode === 13){ //13 이 엔터 입력
         console.log('school_number :',user_School_Number)
         //if(user_School_Number>=10000 && user_School_Number<=99999){
             check_imoji.style.display="inline"
             check_school_number·textContent = "학번 :"+user_School_Number
-
-            console.log(modal.style.display)
-            
-            modal.style.display="none"
-            gs.style.display="none"
-            gameover_show_re.style.display="inline"
-
-            game_start()
+            before_start_setting[0]=1
+            if(before_start_setting[0]==1 && before_start_setting[1]==1){
+                game_start_button.style.display="inline"
+            }
             
             
         //}
@@ -107,7 +122,7 @@ function new_ans(i){
     }else{
         /*not answer*/
         let wrong_answer=0;
-        if(rand(1,2)==1){
+        if(rand(1,2)===1){
             wrong_answer=rand(answer-10,answer-1)
         }else{
             wrong_answer=rand(answer+1,answer+10)
@@ -122,36 +137,51 @@ function new_ans(i){
 
 
 function game_start(){
-    start_time = new Date().getTime()
+    modal.style.display="none"
+    gs.style.display="none"
+    sp.style.display="none"
+    gameover_show_re.style.display="none"
+    score = 0
+    answer = 0 
+    mole_up_time = 5000
+    game_finish = 0
+    percent=[1,holes.length]
+    last_percent=[1,holes.length]
+
     new_pb()
     for(var i=0;i<holes.length;i++){
-        const hole = holes[i]
-        const img = document.createElement('img')
-        img.classList.add('mole-down')
-        img.src = './image/mole.png'
-        img.id = 'mole-movement_'+i
-        
-        hole.appendChild(img)
+        if(last_game===0){
+            hole_out[i]=0
+            const hole = holes[i]
+            const img = document.createElement('img')
+            img.classList.add('mole-down')
+            img.src = './image/mole.png'
+            img.id = 'mole-movement_'+i
+            
+            hole.appendChild(img)
 
-        const span = document.createElement('span')
-        let mole_text=document.createTextNode('')
-        span.classList.add('text-down')
-        span.appendChild(mole_text)
-        span.id = 'text-movement_'+i
+            const span = document.createElement('span')
+            let mole_text=document.createTextNode('')
+            span.classList.add('text-down')
+            span.appendChild(mole_text)
+            span.id = 'text-movement_'+i
 
-        hole.appendChild(span)
+            hole.appendChild(span)
+        }
 
         new_ans(i)
 
 
 
     }
+    start_time = new Date().getTime()
+    last_game=1
     
     let timer_value=0;
     timer_value= setInterval(()=>{
         TIMER.textContent = (5-((new Date().getTime() - start_time)/1000)).toFixed(2)
         if(TIMER.textContent<=0){
-            if(game_finish==0){
+            if(game_finish===0){
                 game_finish = 1
                 console.log('Game Finish!!')
                 TIMER.textContent=0.00
@@ -165,11 +195,20 @@ function game_start(){
         }
     },1)
     for(var i=0;i<holes.length;i++){
-        if(hole_out[i]==0)run(i)
+        if(hole_out[i]===0)run(i)
 
     }
 
     
+}
+
+function retry_game(){
+    modal.style.display = ""
+    gs.style.display = "none"
+    sp.style.display = "inline"
+    user_School_Number=0
+    gameover_show_re.style.display = "none"
+
 }
 
 function mole_move(A,B,i){ /* class : A -> B, down : {A:mole-rise,B:mole-down}, up : {A:mole-down,B:mole-rise} */
@@ -218,7 +257,7 @@ function run(i){
         img.addEventListener('click', () => { /* 두더지를 때렸을 때*/
             if(hole_out[i]===1){
                 hole_out[i]=0
-                if(mole_ans[i]==answer){
+                if(mole_ans[i]===answer){
                     score += 3
                     mole_up_time=max(2000,5000-(3000/5)*(score/3))
                     new_pb()

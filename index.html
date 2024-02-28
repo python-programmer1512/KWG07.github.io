@@ -109,7 +109,7 @@
                     <div class="content">
                         <p>
                             <span>학번을 입력해주세요</span>
-                            <span id="submit-schoolnumber">✅</span>
+                            <span id="submit-schoolnumber_check">✅</span>
                         </p>
                         <p>
                             <span id="submit-schoolnumber">학번 : 11111</span>
@@ -118,12 +118,21 @@
                             <input type="number" id="school_number" inputmode="numeric" onkeypress="school_number(event)"/>
                             <input type="button" value="확인" onclick="click2start()" >
                         </p>
-                        <p>게임 유형을 골라주세요</p>
                         <p>
-                            <input type="button" value="지수" onclick="click2start()" >
-                            <input type="button" value="로그" onclick="click2start()" >
-                            <input type="button" value="수열" onclick="click2start()" >
+                            <span>게임 유형을 골라주세요</span>
+                            <span id="submit-category_check">✅</span>
                         </p>
+                        <p>
+                            <span id="submit-category">선택한 유형 : 수열</span>
+                        </p>
+                        <p>
+                            <input type="button" value="지수" onclick="set_category(value)" >
+                            <input type="button" value="로그" onclick="set_category(value)" >
+                            <input type="button" value="수열" onclick="set_category(value)" >
+                        </p>
+
+                        <input type="button" id="start-img-button" onclick="game_start()">
+                        
 
                     </div>
                 </div>
@@ -133,7 +142,9 @@
                     </div>
                     <div class="content">
                         <p class="button">
-                            <input type="button" class="start-img-button" onclick="setting_game()">
+                            <input type="button" class="setting-start-img-button" onclick="setting_game()">
+                        </p>
+                        <p class="button-2">
                             <input type="button" class="gamerule-img-button" onclick="gamerule()">
                         </p>
                     </div>
@@ -144,7 +155,7 @@
                     </div>
                     <div class="content">
                         <p class="button">
-                            <input type="button" class="start-img-button" onclick="setting_game()">
+                            <input type="button" class="re-img-button" onclick="retry_game()">
                         </p>
                     </div>
                 </div>
