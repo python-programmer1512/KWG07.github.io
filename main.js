@@ -1,92 +1,129 @@
+const modal = document.getElementById("modal")
+const gameover_show_re = document.getElementById("gameover")
+const gs = document.getElementById("game-setting")
+const sp = document.getElementById("start-page")
+const check_imoji = document.getElementById("submit-schoolnumber")
+const check_school_number=document.querySelectorAll('.content span')[2];
 const cursor = document.querySelector('.cursor')
 const holes = [...document.querySelectorAll('.mole')]
 const hole_out = new Array(holes.length).fill(0);
+const mole_ans = new Array(holes.length).fill(0);
 const scoreEl = document.querySelector('.score span')
 const TIMER=document.querySelector('.timer span');
+const PB=document.querySelector('.problem span');
 let score = 0
+let answer = 0 
+let mole_up_time = 5000
+let percent=[1,holes.length]
+let last_percent=[1,holes.length]
+let user_School_Number = 0
+let game_mode = 0
+let time=0
+let start_time = 0
+let game_finish = 0
 
+function ord(v){
+    return String.fromCharCode(v)
+}
+
+function gamerule(){
+
+}
+
+function setting_game(){
+    gs.style.display = "inline"
+    sp.style.display = "none"
+
+}
+
+
+function click2start(){
+    console.log('school_number :',user_School_Number)
+    //if(user_School_Number>=10000 && user_School_Number<=99999){
+        check_imoji.style.display="inline"
+        check_school_number·textContent = "학번 :"+user_School_Number
+
+        console.log(modal.style.display)
+
+        modal.style.display="none"
+        gs.style.display="none"
+        gameover_show_re.style.display="inline"
+        game_start()
+    //}
+}
+
+function school_number(e){ // value + ord(keyCode) : 입력한 숫자
+    if(e.keyCode == 13){ //13 이 엔터 입력
+        console.log('school_number :',user_School_Number)
+        //if(user_School_Number>=10000 && user_School_Number<=99999){
+            check_imoji.style.display="inline"
+            check_school_number·textContent = "학번 :"+user_School_Number
+
+            console.log(modal.style.display)
+            
+            modal.style.display="none"
+            gs.style.display="none"
+            gameover_show_re.style.display="inline"
+
+            game_start()
+            
+            
+        //}
+        
+    }else{
+        user_School_Number = document.getElementById("school_number").value + ord(e.keyCode);
+    }
+}
+
+function min(a,b){
+    if(a>b)return b
+    else return a
+}
+function max(a,b){
+    if(a<b)return b
+    else return a
+}
 
 function rand(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
-
-
-const fastapi = (operation, url, params, success_callback, failure_callback) => {
-    let method = operation
-    let content_type = 'application/json'
-    let body = JSON.stringify(params) /*{"content":"입력"}*/
-    if(operation === 'login') {
-        method = 'post'
-        content_type = 'application/x-www-form-urlencoded'
-        body = qs.stringify(params)
-    }
-
-
-    let _url = import.meta.env.VITE_SERVER_URL+url
-    if(method === 'get') {
-        _url += "?" + new URLSearchParams(params)
-    }
-    let options = {
-        method: method,
-        headers: {
-            "Content-Type": content_type
-        }
-    }
-
-    const _access_token = get(access_token)
-    if (_access_token) {
-        options.headers["Authorization"] = "Bearer " + _access_token
-    }
-
-    if (method !== 'get') {
-        options['body'] = body
-    }
-
-    fetch(_url, options)
-        .then(response => { /* fetch 를 통해 들어온 값이 then 의 response 에 입력되서 then 안에 있는 임의 함수를 실행함*/
-            
-        if(response.status === 204) {  // No content
-                if(success_callback) {
-                    success_callback()
-                }
-                return
-            }
-            response.json()
-                .then(json => {
-
-                    if(response.status >= 200 && response.status < 300) {  // 200 ~ 299
-                        if(success_callback) {
-                            success_callback(json)
-                        }
-                        return
-
-                    }else {
-                        if (failure_callback) {
-                            failure_callback(json)
-                        }else {
-                            alert(JSON.stringify(json))
-                        }
-                    }
-                })
-                .catch(error => {
-                    alert(JSON.stringify(error))
-                })
-        })
 }
 
-function get_rank_class(_class) {
-    fastapi("get", "/api/rank/class/list/" + _class, {}, (json) => {
-        
-        class_rank_list = json.rank_list
-        for(const [index, all_rank] of class_rank_list.entries()){
-            users_rank(all_rank.user_id,all_rank.score,index)
+function new_pb(){
+    answer=rand(1,10)
+    PB.textContent = answer
 
+}
+function new_ans(i){
+    let random=rand(1,percent[1])
+    if(random<=percent[0]){
+        /*answer*/
+        last_percent[0]=percent[0]
+        last_percent[1]=percent[1]
+        last_percent[0]=min(last_percent[0],last_percent[1])
+        percent[0]=1
+        percent[1]++
+
+        mole_ans[i]=answer
+    }else{
+        /*not answer*/
+        let wrong_answer=0;
+        if(rand(1,2)==1){
+            wrong_answer=rand(answer-10,answer-1)
+        }else{
+            wrong_answer=rand(answer+1,answer+10)
         }
-    })
+        mole_ans[i]=wrong_answer
+        percent[0]++
+
+
+    }
+
 }
 
 
 function game_start(){
+    start_time = new Date().getTime()
+    new_pb()
     for(var i=0;i<holes.length;i++){
         const hole = holes[i]
         const img = document.createElement('img')
@@ -97,16 +134,42 @@ function game_start(){
         hole.appendChild(img)
 
         const span = document.createElement('span')
-        let mole_text=document.createTextNode('a')
+        let mole_text=document.createTextNode('')
         span.classList.add('text-down')
         span.appendChild(mole_text)
         span.id = 'text-movement_'+i
 
         hole.appendChild(span)
 
+        new_ans(i)
+
 
 
     }
+    
+    let timer_value=0;
+    timer_value= setInterval(()=>{
+        TIMER.textContent = (5-((new Date().getTime() - start_time)/1000)).toFixed(2)
+        if(TIMER.textContent<=0){
+            if(game_finish==0){
+                game_finish = 1
+                console.log('Game Finish!!')
+                TIMER.textContent=0.00
+            }else{
+                clearTimeout(timer_value)
+                modal.style.display = ""
+                gs.style.display = "none"
+                sp.style.display = "none"
+                gameover_show_re.style.display = "inline"
+            }
+        }
+    },1)
+    for(var i=0;i<holes.length;i++){
+        if(hole_out[i]==0)run(i)
+
+    }
+
+    
 }
 
 function mole_move(A,B,i){ /* class : A -> B, down : {A:mole-rise,B:mole-down}, up : {A:mole-down,B:mole-rise} */
@@ -125,73 +188,76 @@ function mole_move(A,B,i){ /* class : A -> B, down : {A:mole-rise,B:mole-down}, 
 
 }
 
-function updateTimer() {
-    const future = Date.parse("2024/01/01 00:00:00")
-    const now = new Date()
-    const diff = future - now
-
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24))
-    const hours = Math.floor(diff / (1000 * 60 * 60))
-    const mins = Math.floor(diff / (1000 * 60))
-    const secs = Math.floor(diff / 1000)
-
-    const d = days
-    const h = hours - days * 24
-    const m = mins - hours * 60
-    const s = secs - mins * 60
-
-    return s
-
-}
 
 function run(i){
-
     const hole = holes[i]
     let timer = null
     let uptimer = null
-    TIMER.textContent = updateTimer()
-    console.log(TIMER.textContent)
+
+    if(TIMER.textContent<=0){
+        clearTimeout(uptimer)
+        return
+    }
+
+
 
     uptimer = setTimeout(() => { /* 두더지가 올라오기전 대기 시간 */
         const img = document.getElementsByTagName('img')[i]
-        const span = document.getElementsByTagName('span')[i]
+        const span = document.getElementsByTagName('span')[i+1]
 
+        if(TIMER.textContent<=0){
+            clearTimeout(uptimer)
+            return
+        }
+        
         /* 변경 */
-
-        span.innerHTML = "hello";
+        span.innerHTML = mole_ans[i];
         mole_move('down','rise',i)
         hole_out[i]=1
 
         img.addEventListener('click', () => { /* 두더지를 때렸을 때*/
             if(hole_out[i]===1){
                 hole_out[i]=0
-                score += 10
+                if(mole_ans[i]==answer){
+                    score += 3
+                    mole_up_time=max(2000,5000-(3000/5)*(score/3))
+                    new_pb()
+                }else score -= 1
                 scoreEl.textContent = score
                 clearTimeout(timer)
                 mole_move('rise','down',i)
+
+                new_ans(i)
+
                 run(i)
-        
-                setTimeout(() => {
-                }, rand(1000,5000)) /* 다음 두더지가 나오는데 걸리는 시간 */
+                return
+
             }
         })
 
         hole.appendChild(img)
         hole.appendChild(span)
 
+        if(TIMER.textContent<=0){
+            clearTimeout(timer)
+            return
+        }
+
         timer = setTimeout  (() => { /* 두더지를 때리지 못하고 들어갔을때 */
-        hole_out[i]=0
+            hole_out[i]=0
             mole_move('rise','down',i)
+
+            if(TIMER.textContent<=0){
+                clearTimeout(timer)
+                return
+            }
+
+            new_ans(i)
             run(i)
-        }, rand(100000,500000))
+        }, rand(1000,mole_up_time))
 
-    }, rand(1000,2000))
+    }, rand(1000,5000))
 
-}
-game_start()
-
-for(var i=0;i<holes.length;i++){ /* 한번만 실행함 */
-    if(hole_out[i]===0)run(i)
 }
 
 window.addEventListener('mousemove', e => {
@@ -200,6 +266,8 @@ window.addEventListener('mousemove', e => {
 
 
 })
+
+
 window.addEventListener('mousedown', () => {
     cursor.classList.add('active')
 })
@@ -208,10 +276,18 @@ window.addEventListener('mouseup', () => {
     
 })
 
-window.addEventListener('touchstart', () => {
+window.addEventListener('touchstart', (e) => {
+    console.log("touchstart!!!")
+    this.touches = e.changedTouches;
+    cursor.style.top = this.touches[0].pageY  - cursor.clientHeight/2 + 'px'
+    cursor.style.left = this.touches[0].pageX - cursor.clientWidth/2 + 'px'
     cursor.classList.add('active-touch')
 })
-window.addEventListener('touchend', () => {
+window.addEventListener('touchend', (e) => {
+    console.log("touchend!!!")
+    this.touches = e.changedTouches;
+    cursor.style.top = this.touches[0].pageY  - cursor.clientHeight/2 + 'px'
+    cursor.style.left = this.touches[0].pageX - cursor.clientWidth/2 + 'px'
     cursor.classList.remove('active-touch')
     
 })
