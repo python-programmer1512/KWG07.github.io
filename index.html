@@ -197,7 +197,7 @@
 
             function click2start(){
                 console.log('school_number :',user_School_Number)
-                if(user_School_Number>=10000 && user_School_Number<=99999){
+                //if(user_School_Number>=10000 && user_School_Number<=99999){
                     check_imoji.style.display="inline"
                     check_school_number·textContent = "학번 :"+user_School_Number
 
@@ -205,13 +205,13 @@
                     gs.style.display="none"
                     gameover_show_re.style.display="inline"
                     game_start()
-                }
+                //}
             }
 
             function school_number(e){ // value + ord(keyCode) : 입력한 숫자
                 if(e.keyCode == 13){ //13 이 엔터 입력
                     console.log('school_number :',user_School_Number)
-                    if(user_School_Number>=10000 && user_School_Number<=99999){
+                    //if(user_School_Number>=10000 && user_School_Number<=99999){
                         check_imoji.style.display="inline"
                         check_school_number·textContent = "학번 :"+user_School_Number
                         
@@ -222,7 +222,7 @@
                         game_start()
                         
                         
-                    }
+                    //}
                     
                 }else{
                     user_School_Number = document.getElementById("school_number").value + ord(e.keyCode);
@@ -303,7 +303,7 @@
                 
                 let timer_value=0;
                 timer_value= setInterval(()=>{
-                    TIMER.textContent = (60-((new Date().getTime() - start_time)/1000)).toFixed(2)
+                    TIMER.textContent = (5-((new Date().getTime() - start_time)/1000)).toFixed(2)
                     if(TIMER.textContent<=0){
                         if(game_finish==0){
                             game_finish = 1
