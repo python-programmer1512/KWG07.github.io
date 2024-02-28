@@ -370,7 +370,7 @@ left : 실제 이동 값
 }
 
 
-#modal.modal-overlay {
+#modal.modal-overlay { /* 뒤에 흐릿한 부분 */
     width: 100%;
     height: 100%;
     position: absolute;
@@ -380,13 +380,82 @@ left : 실제 이동 값
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: rgba(255, 255, 255, 0.25);
+    background: rgba(121, 115, 115, 0.543);
     box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
     backdrop-filter: blur(1.5px);
     -webkit-backdrop-filter: blur(1.5px);
-    border-radius: 10px;
     border: 1px solid rgba(255, 255, 255, 0.18);
 }
+
+@media(min-width : 550px){
+    #modal.modal-overlay { /* 뒤에 흐릿한 부분 */
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        left: 0;
+        top: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: rgba(121, 115, 115, 0.543);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        backdrop-filter: blur(1.5px);
+        -webkit-backdrop-filter: blur(1.5px);
+        border-radius: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+    }
+}
+
+#game-setting{
+    display: none;
+}
+#start-page{
+    display: inline;
+}
+#gameover{
+    display: none;
+}
+
+.button{
+    transform: translateY(15vh);
+}
+@media(min-width : 550px){
+    #modal.modal-overlay { /* 뒤에 흐릿한 부분 */
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        left: 0;
+        top: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: rgba(121, 115, 115, 0.543);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        backdrop-filter: blur(1.5px);
+        -webkit-backdrop-filter: blur(1.5px);
+        border-radius: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+    }
+}
+
+input.start-img-button{
+    background: url('./image/start.png') no-repeat;
+    background-size: 100%, 50%;
+    border: none;
+    width: 100px;
+    height: 50px;
+}
+input.gamerule-img-button{
+    background: url('./image/gamerule.png') no-repeat;
+    background-size: 100%, 50%;
+    border: none;
+    width: 100px;
+    height: 50px;
+}
+
+
 #modal .modal-window {
     background: rgba( 69, 139, 197, 0.70 );
     box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
@@ -394,12 +463,32 @@ left : 실제 이동 값
     -webkit-backdrop-filter: blur( 13.5px );
     border-radius: 10px;
     border: 1px solid rgba( 255, 255, 255, 0.18 );
-    width: 400px;
+    width: 90vw;
     height: 500px;
     position: relative;
-    top: -100px;
-    padding: 10px;
+    padding: 1.25vw;
+    text-align: center;
 }
+
+@media(min-width : 550px){
+    #modal .modal-window {
+        background: rgba( 69, 139, 197, 0.70 );
+        box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+        backdrop-filter: blur( 13.5px );
+        -webkit-backdrop-filter: blur( 13.5px );
+        border-radius: 10px;
+        border: 1px solid rgba( 255, 255, 255, 0.18 );
+        width: 400px;
+        height: 500px;
+        position: relative;
+        top: -100px;
+        padding: 10px;
+        text-align: center;
+    }
+
+}
+
+
 #modal .title {
     padding-left: 10px;
     display: inline;
@@ -424,4 +513,8 @@ left : 실제 이동 값
     padding: 0px 10px;
     text-shadow: 1px 1px 2px gray;
     color: white;
+}
+
+#submit-schoolnumber{
+    display: none;
 }

@@ -102,22 +102,66 @@
         </div>
         <div id="modal" class="modal-overlay">
             <div class="modal-window">
-                <div class="title">
-                    <h2>Math Game</h2>
+                <div id="game-setting">
+                    <div class="title">
+                        <h2>Math Game</h2>
+                    </div>
+                    <div class="content">
+                        <p>
+                            <span>학번을 입력해주세요</span>
+                            <span id="submit-schoolnumber">✅</span>
+                        </p>
+                        <p>
+                            <span id="submit-schoolnumber">학번 : 11111</span>
+                        </p>
+                        <p>
+                            <input type="number" id="school_number" inputmode="numeric" onkeypress="school_number(event)"/>
+                            <input type="button" value="확인" onclick="click2start()" >
+                        </p>
+                        <p>게임 유형을 골라주세요</p>
+                        <p>
+                            <input type="button" value="지수" onclick="click2start()" >
+                            <input type="button" value="로그" onclick="click2start()" >
+                            <input type="button" value="수열" onclick="click2start()" >
+                        </p>
+
+                    </div>
                 </div>
-                <div class="close-area">X</div>
-                <div class="content">
-                    <p>학번을 입력해주세요(입력 후 엔터)</p>
-                    <input type="number" id="school_number" inputmode="numeric" onkeypress="school_number(event)"/>
+                <div id="start-page">
+                    <div class="title">
+                        <h1>Math Game</h1>
+                    </div>
+                    <div class="content">
+                        <p class="button">
+                            <input type="button" class="start-img-button" onclick="setting_game()">
+                            <input type="button" class="gamerule-img-button" onclick="gamerule()">
+                        </p>
+                    </div>
+                </div>
+                <div id="gameover">
+                    <div class="title">
+                        <h1>Math Game</h1>
+                    </div>
+                    <div class="content">
+                        <p class="button">
+                            <input type="button" class="start-img-button" onclick="setting_game()">
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
 
         <div class="cursor"></div>
         <script>
+            
 
 
             const modal = document.getElementById("modal")
+            const gameover_show_re = document.getElementById("gameover")
+            const gs = document.getElementById("game-setting")
+            const sp = document.getElementById("start-page")
+            const check_imoji = document.getElementById("submit-schoolnumber")
+            const check_school_number=document.querySelectorAll('.content span')[2];
             const cursor = document.querySelector('.cursor')
             const holes = [...document.querySelectorAll('.mole')]
             const hole_out = new Array(holes.length).fill(0);
@@ -131,15 +175,57 @@
             let percent=[1,holes.length]
             let last_percent=[1,holes.length]
             let user_School_Number = 0
+            let game_mode = 0
+            let time=0
+            let start_time = 0
+            let game_finish = 0
+
+            function ord(v){
+                return String.fromCharCode(v)
+            }
+
+            function gamerule(){
+
+            }
+
+            function setting_game(){
+                gs.style.display = "inline"
+                sp.style.display = "none"
+
+            }
 
 
-            function school_number(e){
-                if(e.keyCode == 13){
-                    user_School_Number = document.getElementById("school_number").value;
-                    console.log(user_School_Number)
-                    modal.style.display = "none"
+            function click2start(){
+                console.log('school_number :',user_School_Number)
+                if(user_School_Number>=10000 && user_School_Number<=99999){
+                    check_imoji.style.display="inline"
+                    check_school_number·textContent = "학번 :"+user_School_Number
+
+                    modal.style.display="none"
+                    gs.style.display="none"
+                    gameover_show_re.style.display="inline"
                     game_start()
+                }
+            }
+
+            function school_number(e){ // value + ord(keyCode) : 입력한 숫자
+                if(e.keyCode == 13){ //13 이 엔터 입력
+                    console.log('school_number :',user_School_Number)
+                    if(user_School_Number>=10000 && user_School_Number<=99999){
+                        check_imoji.style.display="inline"
+                        check_school_number·textContent = "학번 :"+user_School_Number
+                        
+                        modal.style.display="none"
+                        gs.style.display="none"
+                        gameover_show_re.style.display="inline"
+
+                        game_start()
+                        
+                        
+                    }
                     
+                }else{
+                    user_School_Number = document.getElementById("school_number").value + ord(e.keyCode);
                 }
             }
 
@@ -190,6 +276,7 @@
 
 
             function game_start(){
+                start_time = new Date().getTime()
                 new_pb()
                 for(var i=0;i<holes.length;i++){
                     const hole = holes[i]
@@ -213,10 +300,30 @@
 
 
                 }
+                
+                let timer_value=0;
+                timer_value= setInterval(()=>{
+                    TIMER.textContent = (10-((new Date().getTime() - start_time)/1000)).toFixed(2)
+                    if(TIMER.textContent<=0){
+                        if(game_finish==0){
+                            game_finish = 1
+                            console.log('Game Finish!!')
+                            TIMER.textContent=0.00
+                        }else{
+                            clearTimeout(timer_value)
+                            modal.style.display = "inline"
+                            gs.style.display = "none"
+                            sp.style.display = "none"
+                            gameover_show_re.style.display = "inline"
+                        }
+                    }
+                },1)
+                for(var i=0;i<holes.length;i++){
+                    if(hole_out[i]==0)run(i)
 
-                for(var i=0;i<holes.length;i++){ /* 한번만 실행함 */
-                    if(hole_out[i]===0)run(i)
                 }
+
+                
             }
 
             function mole_move(A,B,i){ /* class : A -> B, down : {A:mole-rise,B:mole-down}, up : {A:mole-down,B:mole-rise} */
@@ -237,14 +344,25 @@
 
 
             function run(i){
-
                 const hole = holes[i]
                 let timer = null
                 let uptimer = null
 
+                if(TIMER.textContent<=0){
+                    clearTimeout(uptimer)
+                    return
+                }
+
+
+
                 uptimer = setTimeout(() => { /* 두더지가 올라오기전 대기 시간 */
                     const img = document.getElementsByTagName('img')[i]
                     const span = document.getElementsByTagName('span')[i+1]
+
+                    if(TIMER.textContent<=0){
+                        clearTimeout(uptimer)
+                        return
+                    }
                     
                     /* 변경 */
                     span.innerHTML = mole_ans[i];
@@ -266,6 +384,7 @@
                             new_ans(i)
 
                             run(i)
+                            return
 
                         }
                     })
@@ -273,13 +392,23 @@
                     hole.appendChild(img)
                     hole.appendChild(span)
 
+                    if(TIMER.textContent<=0){
+                        clearTimeout(timer)
+                        return
+                    }
+
                     timer = setTimeout  (() => { /* 두더지를 때리지 못하고 들어갔을때 */
-                    hole_out[i]=0
+                        hole_out[i]=0
                         mole_move('rise','down',i)
+
+                        if(TIMER.textContent<=0){
+                            clearTimeout(timer)
+                            return
+                        }
 
                         new_ans(i)
                         run(i)
-                    }, rand(1000,mole_up_time))
+                    }, rand(100000,500000))/*mole_up_time*/
 
                 }, rand(1000,5000))
 
