@@ -15,7 +15,7 @@ const mole_ans = new Array(holes.length).fill(0);
 const scoreEl = document.querySelector('.score span')
 const final_score = document.querySelector('.final-score span')
 const TIMER=document.querySelector('.timer span');
-const PB=document.querySelector('.problem span');
+const PB=document.getElementById('problem');
 const game_start_button = document.getElementById("start-img-button")
 let score = 0
 let answer = 0 
@@ -30,6 +30,17 @@ let category = 0
 let category_list = ["로그","지수","수열"]
 let before_start_setting = [0,0] // 학번 입력, 게임 유형 선택
 let game_play_time = 60
+let problem_score=[0,0]
+let game_record = []
+let record_style={
+    "category":"",
+    "problem":"",
+    "problem_answer":0,
+    "user_answers":""
+}
+let correct_pb_cnt = 0
+let wrong_pb_cnt = 0
+
 
 /*
 upload={
@@ -91,6 +102,9 @@ function click2start(){
         check_imoji_check.style.display="inline"
         check_school_number.textContent = "학번 :"+user_School_Number
         before_start_setting[0]=1
+        if(before_start_setting[0]==1 && before_start_setting[1]==1){
+            game_start_button.style.display="inline"
+        }
 
     //}else{ // 조건 만족 안하면 inline -> none}
 }
@@ -156,41 +170,96 @@ function new_pb(){
     
     
     */
-    let problem;
+    let problem="";
     if(category==="수열"){
         let a_1 = rand(2,5)
-        let number_cnt=rand(3,6)
-        let rdm=rand(1,3)
+        let number_cnt=rand(3,5)
+        let rdm=1//rand(1,3)
+        /*
+        let record_style={
+            "category":"",
+            "problem":"",
+            "problem_answer":0,
+            "user_answers":""
+        }
+        */
         if(rdm==1){
             /*공차 or 공비 구하기 */
             if(rand(1,2)==1){
                 /*등비 */
                 let r=rand(-5,5)
+                for(var i=0;i<number_cnt;i++){
+                    
+                    if(number_cnt>=3 && i==parseInt(number_cnt/2))problem+= "\\\\ "
+                    problem+="a_"+(i+1)+" = "+(a_1*Math.pow(r,i))+", "
+                }
+                problem+="r = ?"
+                record_style["category"]="공비 구하기"
+                answer=r
+                
             }else{
                 /*등차 */
                 let d=rand(-5,5)
+                for(var i=0;i<number_cnt;i++){
+                    if(number_cnt>=3 && i==parseInt(number_cnt/2))problem+= "\\\\ "
+                    problem+="a_"+(i+1)+" = "+(a_1+d*i)+", "
+                }
+                problem+="d = ?"
+                record_style["category"]="공차 구하기"
+                answer=d
             }
+            problem_score=[1,-1] // 맞추면 1점, 틀리면 1점
+
         }else if(rdm==2){
             /*빈칸 */
             let idx=rand(0,number_cnt-1)
             if(rand(1,2)==1){
                 /*등비 */
                 let r=rand(-5,5)
+                for(var i=0;i<number_cnt;i++){
+                    if(number_cnt>=3 && i==parseInt(number_cnt/2))problem+= "\\\\ "
+                    if(i===idx)continue
+                    problem+="a_"+(i+1)+" = "+(a_1*Math.pow(r,i))+", " 
+                }
+                problem+="a_"+(idx+1)+" = ?"
+                record_style["category"]="빈칸 구하기(등비)"
+                answer=a_1*(r**idx)
             }else{
                 /*등차 */
                 let d=rand(-5,5)
+                for(var i=0;i<number_cnt;i++){
+                    if(number_cnt>=3 && i==parseInt(number_cnt/2))problem+= "\\\\ "
+                    if(i===idx)continue
+                    problem+="a_"+(i+1)+" = "+(a_1+d*i)+", "
+                }
+                problem+="a_"+(idx+1)+" = ?"
+                record_style["category"]="빈칸 구하기(등차)"
+                answer=a_1+d*idx
             }
+            problem_score=[2,-2]
 
         }else{
             /*n번째 항 */
             let N=rand(number_cnt+3,number_cnt+20)
             /*등차 */
             let d=rand(-5,5)
+            let first_a = rand(1,number_cnt-1)
+            let second_a = rand(first_a+1,number_cnt)
+            problem = "a_"+first_a+" = "+(a_1+d*(first_a-1))+", "+"a_"+second_a+" = "+(a_1+d*(second_a-1))+", "+"a_"+N + " = ?"
+            record_style["category"]="n번째 값 구하기"
+            answer=a_1+d*(N-1)
+            problem_score=[3,-3]
             
         }
     }
-    answer=rand(1,10)
-    PB.textContent = problem
+    record_style["problem"]=problem
+    record_style["problem_answer"]=answer
+    katex.render(problem, PB, { 
+        throwOnError:false,
+        strict: true
+    });
+    //console.log(katex)
+    //PB.textContent = problem
 
 }
 function new_ans(i){
@@ -232,9 +301,13 @@ function game_start(){
     percent=[1,holes.length]
     last_percent=[1,holes.length]
 
-    console.log('NEW GAME')
-    console.log('mole cnt')
-    console.log(holes.length)
+    game_record = []
+    record_style={
+        "category":"",
+        "problem":"",
+        "problem_answer":0,
+        "user_answers":""
+    }
 
     new_pb()
     for(var i=0;i<holes.length;i++){
@@ -276,6 +349,8 @@ function game_start(){
             if(game_finish===0){
                 game_finish = 1
                 console.log('Game Finish!!')
+                game_record.push(record_style)
+                console.log(game_record)
                 TIMER.textContent=0.00
             }else{
                 clearTimeout(timer_value)
@@ -322,6 +397,21 @@ function mole_move(A,B,i){ /* class : A -> B, down : {A:mole-rise,B:mole-down}, 
 
 
 }
+function update_percent(new_answer){
+    let percent=[1,holes.length]
+    let last_percent=[1,holes.length]
+    for(var i=0;i<holes.length;i++){
+        if(mole_ans[i]==new_answer){
+            last_percent[0]=percent[0]
+            last_percent[1]=percent[1]
+            last_percent[0]=min(last_percent[0],last_percent[1])
+            percent[0]=1
+            percent[1]++
+        }else{
+            percent[0]++
+        }
+    }
+}
 
 
 function run(i){
@@ -337,12 +427,9 @@ function run(i){
         return
     }
 
-
-
     uptimer = setTimeout(() => { /* 두더지가 올라오기전 대기 시간 */
-        const img = document.getElementsByTagName('img')[i]
-        const span = document.getElementsByTagName('span')[i+1]
-        console.log('finish delay')
+        const img = document.getElementById('mole-movement_'+i)
+        const span = document.getElementById('text-movement_'+i)
 
         if(TIMER.textContent<=0){
             console.log('gameover1')
@@ -359,9 +446,22 @@ function run(i){
             if(hole_out[i]===1){
                 hole_out[i]=0
                 if(mole_ans[i]===answer){
-                    score += 3
+                    score += problem_score[0]
+                    correct_pb_cnt++
+                    game_record.push(record_style)
+                    record_style={
+                        "category":"",
+                        "problem":"",
+                        "problem_answer":0,
+                        "user_answers":""
+                    }
                     new_pb()
-                }else score -= 1
+                    update_percent(answer)
+                }else {
+                    score += problem_score[1]
+                    wrong_pb_cnt++
+                    record_style["user_answers"]+=String(mole_ans[i])+","
+                }
                 scoreEl.textContent = score
                 clearTimeout(timer)
                 mole_move('rise','down',i)
@@ -393,7 +493,7 @@ function run(i){
 
             new_ans(i)
             run(i)
-        }, rand(1000,2000))
+        }, rand(1000,3000))
 
     }, rand(1000,5000))
 

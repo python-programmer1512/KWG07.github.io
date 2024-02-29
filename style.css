@@ -8,6 +8,7 @@ body{
     color: #fff;
     user-select: none;
     cursor : none;
+    
 
 }
 
@@ -45,12 +46,12 @@ left : 실제 이동 값
 
 }
 
-.problem{
+#problem{
     pointer-events: none;
     text-align: center;
     color:black;
-    font-size:125%;
-    transform: translateY(50px);
+    font-size:100%;
+    transform: translateY(40px);
 }
 
 .board{
@@ -148,7 +149,7 @@ left : 실제 이동 값
     transform: translateY(110%);
 
     animation-name: text-rise;
-    animation-duration: 1s;
+    animation-duration: .8s;
     animation-fill-mode: forwards;
 
     font-size: .5em;
