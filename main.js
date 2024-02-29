@@ -31,6 +31,37 @@ let category_list = ["로그","지수","수열"]
 let before_start_setting = [0,0] // 학번 입력, 게임 유형 선택
 let game_play_time = 60
 
+/*
+upload={
+            "main_category": "",
+            "correct_pb_cnt": 4440,
+            "wrong_pb_cnt": 3330,
+            "score": 144231330,
+            "user_name": "",
+            "create_date": datetime.now(),
+            "detail": [
+                {
+                "category": "1112222",
+                "problem": "33334444",
+                "problem_answer": "qqqqqwwww",
+                "user_answers": "ddddzzzxss"
+                }
+            ]
+            }
+
+
+수열 문제 유형
+1. 빈칸 o 3점
+2. 공차 구하기 o 3점
+3. n번째 항 구하기  5점      n번째 항 : an, 1번째 항 : a1
+
+지수함수
+
+로그함수
+
+
+*/
+
 function ord(v){
     return String.fromCharCode(v)
 }
@@ -112,8 +143,54 @@ function rand(min, max) {
 }
 
 function new_pb(){
+
+    /*
+    수열 문제 유형
+    1. 빈칸 o 3점
+    2. 공차 구하기 o 3점
+    3. n번째 항 구하기  5점      n번째 항 : an, 1번째 항 : a1
+
+    지수함수
+
+    로그함수
+    
+    
+    */
+    let problem;
+    if(category==="수열"){
+        let a_1 = rand(2,5)
+        let number_cnt=rand(3,6)
+        let rdm=rand(1,3)
+        if(rdm==1){
+            /*공차 or 공비 구하기 */
+            if(rand(1,2)==1){
+                /*등비 */
+                let r=rand(-5,5)
+            }else{
+                /*등차 */
+                let d=rand(-5,5)
+            }
+        }else if(rdm==2){
+            /*빈칸 */
+            let idx=rand(0,number_cnt-1)
+            if(rand(1,2)==1){
+                /*등비 */
+                let r=rand(-5,5)
+            }else{
+                /*등차 */
+                let d=rand(-5,5)
+            }
+
+        }else{
+            /*n번째 항 */
+            let N=rand(number_cnt+3,number_cnt+20)
+            /*등차 */
+            let d=rand(-5,5)
+            
+        }
+    }
     answer=rand(1,10)
-    PB.textContent = answer
+    PB.textContent = problem
 
 }
 function new_ans(i){
