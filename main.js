@@ -35,7 +35,7 @@ let game_record = []
 let record_style={
     "category":"",
     "problem":"",
-    "problem_answer":0,
+    "problem_answer":"",
     "user_answers":""
 }
 let correct_pb_cnt = 0
@@ -72,6 +72,59 @@ upload={
 
 
 */
+
+const fastapi = (url, params, success_callback, failure_callback) => {
+    let method = "post"
+    let content_type = 'application/json'
+    let body = JSON.stringify(params) /*{"content":"입력"}*/
+
+    let options = {
+        method: method,
+        credentials: "include",
+        headers: {
+            "Content-Type": content_type
+        }
+    }
+    let _url = url
+
+    if (method !== 'get') {
+        options['body'] = body
+    }
+
+    fetch(_url, options)
+        .then(response => { /* fetch 를 통해 들어온 값이 then 의 response 에 입력되서 then 안에 있는 임의 함수를 실행함*/
+            
+        if(response.status === 204) {  // No content
+                if(success_callback) {
+                    success_callback()
+                }
+                return
+            }
+            response.json()
+                .then(json => {
+
+
+                    if(response.status >= 200 && response.status < 300) {  // 200 ~ 299
+                        if(success_callback) {                 
+
+                            success_callback(json)
+                        
+                        }
+                        return
+
+                    }else {
+                        if (failure_callback) {
+                            failure_callback(json)
+                        }else {
+                            console.log(JSON.stringify(json))
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.log(JSON.stringify(error))
+                })
+        })
+}
 
 function ord(v){
     return String.fromCharCode(v)
@@ -253,7 +306,7 @@ function new_pb(){
         }
     }
     record_style["problem"]=problem
-    record_style["problem_answer"]=answer
+    record_style["problem_answer"]=String(answer)
     katex.render(problem, PB, { 
         throwOnError:false,
         strict: true
@@ -305,7 +358,7 @@ function game_start(){
     record_style={
         "category":"",
         "problem":"",
-        "problem_answer":0,
+        "problem_answer":"",
         "user_answers":""
     }
 
@@ -352,6 +405,41 @@ function game_start(){
                 game_record.push(record_style)
                 console.log(game_record)
                 TIMER.textContent=0.00
+
+                /*
+                
+                {
+                    "main_category": "",
+                    "correct_pb_cnt": 4440,
+                    "wrong_pb_cnt": 3330,
+                    "score": 144231330,
+                    "user_name": "",
+                    "create_date": datetime.now(),
+                    "detail": [
+                        {
+                        "category": "1112222",
+                        "problem": "33334444",
+                        "problem_answer": "qqqqqwwww",
+                        "user_answers": "ddddzzzxss"
+                        }
+                    ]
+                }
+                
+                */
+                console.log(game_record)
+                let params = {
+                    main_category:category,
+                    correct_pb_cnt: correct_pb_cnt,
+                    wrong_pb_cnt : wrong_pb_cnt,
+                    score : score,
+                    detail:game_record
+                
+                
+                }
+                
+                fastapi("http://127.0.0.1:8000/api/record/create/20402/", params, (json) => {
+                    records = json
+                })
             }else{
                 clearTimeout(timer_value)
                 modal.style.display = ""
@@ -452,7 +540,7 @@ function run(i){
                     record_style={
                         "category":"",
                         "problem":"",
-                        "problem_answer":0,
+                        "problem_answer":"",
                         "user_answers":""
                     }
                     new_pb()
