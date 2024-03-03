@@ -42,7 +42,7 @@ let record_style={
 let correct_pb_cnt = 0
 let wrong_pb_cnt = 0
 
-const domain = "http://127.0.0.1:8000"
+const domain = "https://mathgame.bass9030.dev"
 
 /*
 upload={
