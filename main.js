@@ -44,36 +44,6 @@ let wrong_pb_cnt = 0
 
 const domain = "https://mathgame.bass9030.dev"
 
-/*
-upload={
-            "main_category": "",
-            "correct_pb_cnt": 4440,
-            "wrong_pb_cnt": 3330,
-            "score": 144231330,
-            "user_name": "",
-            "create_date": datetime.now(),
-            "detail": [
-                {
-                "category": "1112222",
-                "problem": "33334444",
-                "problem_answer": "qqqqqwwww",
-                "user_answers": "ddddzzzxss"
-                }
-            ]
-            }
-
-
-수열 문제 유형
-1. 빈칸 o 3점
-2. 공차 구하기 o 3점
-3. n번째 항 구하기  5점      n번째 항 : an, 1번째 항 : a1
-
-지수함수
-
-로그함수
-
-
-*/
 function pow(a,b){
     return Math.pow(a,b)
 }
