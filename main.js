@@ -45,7 +45,7 @@ let wrong_pb_cnt = 0
 let audio = new Audio('./audio/atteck.mp3');
 let correct = new Audio('./audio/correct.mp3');
 
-const domain = "http://127.0.0.1:8000"//"https://mathgame.bass9030.dev"
+const domain = "https://mathgame.bass9030.dev" //"http://127.0.0.1:8000"//
 
 function pow(a,b){
     return Math.pow(a,b)
