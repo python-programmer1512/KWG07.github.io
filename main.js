@@ -42,34 +42,56 @@ let record_style={
 let correct_pb_cnt = 0
 let wrong_pb_cnt = 0
 
-const domain = "https://mathgame.bass9030.dev"
+let audio = new Audio('./audio/atteck.mp3');
+let correct = new Audio('./audio/correct.mp3');
+
+const domain = "http://127.0.0.1:8000"//"https://mathgame.bass9030.dev"
 
 function pow(a,b){
     return Math.pow(a,b)
 }
 
-function fastapi(url, params){
+function fastapi(method,url, params){
     
-    var xhr = new XMLHttpRequest();
+    if(method=='post'){
+        var xhr = new XMLHttpRequest();
 
-    xhr.open("POST", url, true);
+        xhr.open("POST", url, true);
 
-    // Set headers
-    xhr.setRequestHeader("Accept", "*/*");
-    xhr.setRequestHeader("Content-Type", "application/json");
+        // Set headers
+        xhr.setRequestHeader("Accept", "*/*");
+        xhr.setRequestHeader("Content-Type", "application/json");
 
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-            // Request was successful
-            console.log(xhr.responseText);
-        } else {
-            // Handle errors or other status codes here
-            console.error(xhr.statusText);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                // Request was successful
+                console.log(xhr.responseText);
+            } else {
+                // Handle errors or other status codes here
+                console.error(xhr.statusText);
+            }
+        };
+
+        xhr.send(params);
+    }else if(method=='get'){
+        //fastapi(domain+"/api/record/create/"+String(user_School_Number), params)
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', url);
+
+        xhr.onreadystatechange = () => {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status === 200) {
+                console.log('통신 성공!');
+                console.log(xhr.responseText,JSON.parse(xhr.responseText).user_exit);
+                console.log(JSON.parse(xhr.responseText).user_exit==true)
+            } else {
+                console.error('통신 실패!');
+            }
         }
-    };
+        };
 
-    xhr.send(params);
-
+        xhr.send();
+    }
 
 
 
@@ -116,6 +138,28 @@ function fastapi(url, params){
         })
         */
 }
+const user_available_check = (url,succes_callback,failure_callback) => {
+    const xhr = new XMLHttpRequest();
+
+    xhr.open('GET', url);
+
+    xhr.onreadystatechange = () => {
+    if (xhr.readyState === XMLHttpRequest.DONE) {
+        if (xhr.status === 200) {
+            // console.log('통신 성공!');
+            // console.log(xhr.responseText,JSON.parse(xhr.responseText).user_exit);
+            // console.log(JSON.parse(xhr.responseText).user_exit==true)
+            succes_callback(JSON.parse(xhr.responseText))
+        } else {
+            failure_callback()
+            // console.error('통신 실패!');
+        }
+    }
+    };
+
+    xhr.send();
+}
+
 
 function ord(v){
     return String.fromCharCode(v)
@@ -140,16 +184,31 @@ function setting_game(){
 
 
 function click2start(){
-    if(user_School_Number>=20100 && user_School_Number<=20999){
-        check_imoji.style.display="inline"
-        check_imoji_check.style.display="inline"
-        check_school_number.textContent = "학번 :"+user_School_Number
-        before_start_setting[0]=1
-        if(before_start_setting[0]==1 && before_start_setting[1]==1){
-            game_start_button.style.display="inline"
+    user_available_check(domain+'/api/user/user-exist/'+String(user_School_Number),(json)=>{
+        if(json.user_exit){
+            check_imoji.style.display="inline"
+            check_imoji_check.style.display="inline"
+            check_school_number.textContent = "학번 :"+user_School_Number
+            before_start_setting[0]=1
+            if(before_start_setting[0]==1 && before_start_setting[1]==1){
+                game_start_button.style.display="inline"
+            }
+        }else{
+            before_start_setting[0]=0
+            check_imoji.style.display="inline"
+            check_imoji_check.style.display="none"
+            check_school_number.textContent = "존재하지 않는 학번입니다."
+            game_start_button.style.display="none"
         }
+    },
+    ()=>{
+        before_start_setting[0]=0
+        check_imoji.style.display="inline"
+        check_imoji_check.style.display="none"
+        check_school_number.textContent = "다시 시도해주세요."
+        game_start_button.style.display="none"
+    })
 
-    }//else{ // 조건 만족 안하면 inline -> none}
 }
 function set_category(input_category){
     if(category_list.includes(String(input_category))){
@@ -169,17 +228,31 @@ function set_category(input_category){
 
 function school_number(e){ // value + ord(keyCode) : 입력한 숫자
     if(e.keyCode === 13){ //13 이 엔터 입력
-
-        if(user_School_Number>=20100 && user_School_Number<=20999){
-            check_imoji.style.display="inline"
-            check_school_number·textContent = "학번 :"+user_School_Number
-            before_start_setting[0]=1
-            if(before_start_setting[0]==1 && before_start_setting[1]==1){
-                game_start_button.style.display="inline"
+        user_available_check(domain+'/api/user/user-exist/'+String(user_School_Number),(json)=>{
+            if(json.user_exit){
+                check_imoji.style.display="inline"
+                check_imoji_check.style.display="inline"
+                check_school_number.textContent = "학번 :"+user_School_Number
+                before_start_setting[0]=1
+                if(before_start_setting[0]==1 && before_start_setting[1]==1){
+                    game_start_button.style.display="inline"
+                }
+            }else{
+                before_start_setting[0]=0
+                check_imoji.style.display="inline"
+                check_imoji_check.style.display="none"
+                check_school_number.textContent = "존재하지 않는 학번입니다."
+                game_start_button.style.display="none"
             }
-            
-            
-        }
+        },
+        ()=>{
+            before_start_setting[0]=0
+            check_imoji.style.display="inline"
+            check_imoji_check.style.display="none"
+            check_school_number.textContent = "다시 시도해주세요."
+            game_start_button.style.display="none"
+        })
+        
         
     }else{
         user_School_Number = document.getElementById("school_number").value + ord(e.keyCode);
@@ -219,10 +292,30 @@ function linear_func_create(a,b){
             return (b)
         }
     }
+    if(a==1){
+        if(b<0){
+            return "x-"+(-b)
+        }else if (b>0){
+            return "x+"+(b)
+        }else{
+            return "x"
+        }
+    }
+    if(a==-1){
+        if(b<0){
+            return "-x-"+(-b)
+        }else if(b>0){
+            return "-x+"+(b)
+        }else{
+            return "-x"
+        }
+    }
     if(b<0){
         return (a)+"x-"+(-b)
-    }else{
+    }else if(b>0){
         return (a)+"x+"+(b)
+    }else{
+        return (a)+"x"
     }
 }
 
@@ -452,7 +545,11 @@ function new_pb(){
         }else if(rdm==2){
             let a=rand(-5,5)
             let b=rand(0,5)
-            problem="{"+(a)+"}^{"+(b)+"} = ?"
+            if(a>0){
+                problem="{"+(a)+"}^{"+(b)+"} = ?"
+            }else{
+                problem="{("+(a)+")}^{"+(b)+"} = ?"
+            }
             record_style["category"]="지수 함수 값 계산하기"
             problem_score=[1,-1]
             answer=pow(a,b)
@@ -601,7 +698,7 @@ function game_start(){
                     "detail": game_record
                 });
                 
-                fastapi(domain+"/api/record/create/"+String(user_School_Number), params)
+                fastapi('post',domain+"/api/record/create/"+String(user_School_Number), params)
 
             }else{
                 clearTimeout(timer_value)
@@ -696,6 +793,7 @@ function run(i){
                     correct_pb_cnt++
                     record_style["user_answers"]+=String(mole_ans[i])
                     game_record.push(record_style)
+                    correct.play()
                     record_style={
                         "category":"",
                         "problem":"",
@@ -755,6 +853,8 @@ window.addEventListener('mousemove', e => {
 
 
 window.addEventListener('mousedown', () => {
+    audio.play()
+    audio.volume = 0.5
     cursor.classList.add('active')
 })
 window.addEventListener('mouseup', () => {
@@ -763,13 +863,15 @@ window.addEventListener('mouseup', () => {
 })
 
 window.addEventListener('touchstart', (e) => {
-    this.touches = e.changedTouches;
+    audio.play()
+    audio.volume = 0.5
+    this.touches = e.changedTouches
     cursor.style.top = this.touches[0].pageY  - cursor.clientHeight/2 + 'px'
     cursor.style.left = this.touches[0].pageX - cursor.clientWidth/2 + 'px'
     cursor.classList.add('active-touch')
 })
 window.addEventListener('touchend', (e) => {
-    this.touches = e.changedTouches;
+    this.touches = e.changedTouches
     cursor.style.top = this.touches[0].pageY  - cursor.clientHeight/2 + 'px'
     cursor.style.left = this.touches[0].pageX - cursor.clientWidth/2 + 'px'
     cursor.classList.remove('active-touch')
