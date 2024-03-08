@@ -1,0 +1,17 @@
+body{
+    background: black;
+}
+.main-text{
+    color: white;
+    margin-bottom: 100px;
+    padding-top:10px
+    
+}
+.container{
+    
+    margin: 5%;
+}
+
+.title{
+    font-size: 25px;
+}
