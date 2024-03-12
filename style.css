@@ -1,0 +1,15 @@
+
+
+.box{ 
+    margin: 20px; 
+    width: 100px; 
+    height: 100px; 
+    text-align: center; 
+    line-height: 100px; 
+}
+
+.box1{
+    width: 100px; 
+    height: 100px;
+    background: orange; 
+}
