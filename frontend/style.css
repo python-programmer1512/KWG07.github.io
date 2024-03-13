@@ -63,6 +63,7 @@
 
     width: 930px;
     height: 95%;
+    opacity: 0.6;
 
     margin-top: 15px;
 
@@ -78,8 +79,13 @@
         width: 930px;
         height: 95%;
         margin-top: 15px;
+        opacity: 0.6;
         padding-bottom: 50px;
     }
+}
+
+.section-grid:hover{
+    opacity: 1;
 }
 
 .text{
@@ -177,6 +183,7 @@ p{
         border-color: white;
     }
 }
+
 
 .Section{
     padding-bottom: 3px;
